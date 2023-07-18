@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 
-def calculate_entropy(x, normal_method):
+def calculate_entropy(x, normal_method=None):
     """
     熵权法求权重
     input: 
@@ -20,8 +20,7 @@ def calculate_entropy(x, normal_method):
     output: Series  - 每个指标的权重
     """
     
-    
-    if normal_method == None:
+    if normal_method is None:
         x = x
     # 正向指标，即数值越大越好
     elif normal_method == 'positive':
@@ -29,7 +28,6 @@ def calculate_entropy(x, normal_method):
     # 负向指标，即数值越小越好
     elif normal_method == 'negative':
         x = x.apply(lambda y: ((np.max(y) - y) / (np.max(y) - np.min(y))))
-    
 
     # 计算概率p_ij比重
     p = x
@@ -64,12 +62,11 @@ if __name__ == "__main__":
     df = pd.DataFrame(data, columns=['A', 'B', 'C'])
     print(df)
     # 计算权重，只能输入数据，不能有字符串
-    weight = calculate_entropy(df)
+    weight = calculate_entropy(df, normal_method=None)
     print('权重:\n', weight)
 
     # 根据权重计算综合得分
     # $ score = sum(weight1*指标1 + weight2*指标2 + …… ) $
     df_score = df.apply(lambda x: sum(x * weight), axis=1)
     print('得分\n', df_score)
-
-
+    
